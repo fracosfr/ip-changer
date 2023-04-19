@@ -205,9 +205,30 @@ func setOff()
 EndFunc
 
 func printError($message)
-	MsgBox($MB_ICONERROR +  $MB_OK, "ERREUR !", $message)
+	MsgBox($MB_ICONERROR +  $MB_OK, translate("msg_box_title", "error", "ERROR!"), $message)
 EndFunc
 
-func printInfo($message, $title = "Terminé !")
+func printInfo($message, $title = translate("msg_box_title", "done", "DONE!"))
 	MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
+EndFunc
+
+func translate($section, $key, $default)
+	$appFileConfig = "config.ini"
+	if not FileExists($appFileConfig) Then
+		Return $default
+	EndIf
+
+	$language = IniRead($appFileConfig, "locale", "language", "")
+
+	if $language == "" Then
+		Return $default
+	EndIf
+
+	$languageFile = "locale/" & $language & ".ini"
+
+	if not FileExists($languageFile)  Then
+		Return $default
+	EndIf
+
+	Return IniRead($languageFile, $section, $key, $default)
 EndFunc

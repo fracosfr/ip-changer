@@ -1,0 +1,4 @@
+# IP CHANGER CONFIG FILE
+[interface]
+name=Ethernet
+mode=DHCP

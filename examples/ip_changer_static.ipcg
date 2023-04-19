@@ -1,0 +1,40 @@
+# IP CHANGER CONFIG FILE
+
+# Interface configuration
+[interface]
+# the name of the interface
+name=Ethernet
+# mode can be OFF (eq disabled), DHCP, STATIC or ON (eq enabled)
+mode=STATIC
+
+# Static IP configuration (needed only if mode=STATIC)
+[static]
+# ip address
+ip=192.168.2.10
+# net mask (default : 24 if powershell or 255.255.255.0)
+mask=24
+# gateway (default : x.x.x.1)
+#gateway=192.168.0.1
+
+# Use DNS servers can be use in STATIC mode or DHCP mode
+[dns] 
+primary=8.8.8.8
+secondary=8.8.4.4
+
+# Driver method, if powershell the script use NetTCPIP, else the script use netsh 
+[driver]
+# use powershell (Yes/No) default : Yes (case sensitive)
+powershell=Yes
+
+# Proxy settings
+[proxy]
+# server ip address
+server=1.2.3.4
+# proxy port (needed)
+port=9876
+# Address override, theses addresses will dont use the proxy
+override=123.123.123.123;123.123.123.124
+# Dont use the proxy with local addresses (default No)
+overrideLocal=Yes
+# install script, leave blank or comment the line to disable it.
+script=monscript.sh

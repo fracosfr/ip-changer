@@ -107,3 +107,5 @@ override=123.123.123.123;123.123.123.124
 overrideLocal=Yes
 script=monscript.sh
 ```
+## Download
+You can downlod the lastest version on this page : https://github.com/fracosfr/ip-changer/releases

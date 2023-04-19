@@ -14,7 +14,7 @@ if $CmdLine[0] == 1 Then
 EndIf
 
 if $FILECONFIG == "" Then
-	printError("Aucun fichier de configuration spécifié !")
+	printError("Aucun fichier de configuration spÃ©cifiÃ© !")
 	Exit
 EndIf
 
@@ -39,19 +39,19 @@ EndIf
 
 if $MODE == "OFF" Then
 	setOff()
-	printInfo("La carte "&$INTERFACE&" a bien été désactivée !")
+	printInfo("La carte "&$INTERFACE&" a bien Ã©tÃ© dÃ©sactivÃ©e !")
 	Exit
 EndIf
 
 if $MODE == "ON" Then
 	setOn()
-	printInfo("La carte "&$INTERFACE&" a bien été activée !")
+	printInfo("La carte "&$INTERFACE&" a bien Ã©tÃ© activÃ©e !")
 	Exit
 EndIf
 
 if $MODE == "DHCP" Then
 	setDhcp()
-	printInfo("La carte "&$INTERFACE&" a été configurée en mode DHCP !")
+	printInfo("La carte "&$INTERFACE&" a Ã©tÃ© configurÃ©e en mode DHCP !")
 	Exit
 EndIf
 
@@ -67,13 +67,13 @@ if $MODE == "STATIC" Then
 	
 	
 	if $ip == "" Then
-		printError("Une adresse IP doit être spécifiée !")
+		printError("Une adresse IP doit Ã©tre spÃ©cifiÃ©e !")
 		Exit
 	EndIf
 	
 	$ar_ip = StringSplit($ip, ".")
 	if $ar_ip[0] <> 4 Then
-		printError("L'adresse ip spécifiée n'est pas valide !")
+		printError("L'adresse ip spÃ©cifiÃ©e n'est pas valide !")
 		Exit
 	EndIf
 	
@@ -98,7 +98,7 @@ if $MODE == "STATIC" Then
 	setOff()
 	setOn()
 	
-	printInfo("La carte "&$INTERFACE&" a été configurée avec l'adresse IP statique "&$ip&" !")
+	printInfo("La carte "&$INTERFACE&" a Ã©tÃ© configurÃ©e avec l'adresse IP statique "&$ip&" !")
 	Exit
 EndIf
 
@@ -208,6 +208,6 @@ func printError($message)
 	MsgBox($MB_ICONERROR +  $MB_OK, "ERREUR !", $message)
 EndFunc
 
-func printInfo($message, $title = "Terminé !")
+func printInfo($message, $title = "TerminÃ© !")
 	MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
 EndFunc

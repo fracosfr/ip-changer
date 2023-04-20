@@ -35,7 +35,7 @@ global $INTERFACE = IniRead($FILECONFIG, "interface", "name", "")
 global $MODE = IniRead($FILECONFIG, "interface", "mode", "")
 global $POWERSHELL = IniRead($FILECONFIG, "driver", "powershell", "Yes")
 
-if $GUIMODE <> "alert" and $GUIMODE <> "quiet" and $GUIMODE <> "console" Then
+if $GUIMODE <> "alert" and $GUIMODE <> "quiet" Then
 	$GUIMODE = IniRead("config.ini", "gui", "mode", IniRead($FILECONFIG, "gui", "mode", "alert"))
 EndIf
 
@@ -46,21 +46,21 @@ EndIf
 
 if $MODE == "OFF" Then
 	setOff()
-	dim $vars[1] =  ["interface="&INTERFACE]
+	dim $vars[1] =  ["interface="&$INTERFACE]
 	printInfo(translate("success", "off", "The {interface} interface has been desactivated.",$vars))
 	Exit
 EndIf
 
 if $MODE == "ON" Then
 	setOn()
-	dim $vars[1] =  ["interface="&INTERFACE]
+	dim $vars[1] =  ["interface="&$INTERFACE]
 	printInfo(translate("success", "on", "The {interface} interface has been activated.",$vars))
 	Exit
 EndIf
 
 if $MODE == "DHCP" Then
 	setDhcp()
-	dim $vars[1] =  ["interface="&INTERFACE]
+	dim $vars[1] =  ["interface="&$INTERFACE]
 	printInfo(translate("success", "dhcp", "The {interface} interface has been configured on DHCP mode.",$vars))
 	Exit
 EndIf
@@ -107,7 +107,7 @@ if $MODE == "STATIC" Then
 	setOff()
 	setOn()
 	
-	dim $vars[1] =  ["interface="&INTERFACE, "ip="&$ip]
+	dim $vars[1] =  ["interface="&$INTERFACE, "ip="&$ip]
 	printInfo(translate("success", "static", "The {interface} interface has been configured on STATIC mode with ip {ip}.",$vars))
 	Exit
 EndIf
@@ -216,9 +216,6 @@ EndFunc
 
 func printError($message)
 	if $GUIMODE == "quiet" then
-
-	ElseIf $GUIMODE == "console" then
-		ConsoleWrite(translate("msg_box_title", "error", "ERROR")& " : " & $message)
 	Else
 		MsgBox($MB_ICONERROR +  $MB_OK, translate("msg_box_title", "error", "ERROR"), $message)
 	EndIf
@@ -226,9 +223,6 @@ EndFunc
 
 func printInfo($message, $title = translate("msg_box_title", "done", "Done"))
 	if $GUIMODE == "quiet" then
-
-	ElseIf $GUIMODE == "console" then
-		ConsoleWrite(translate("msg_box_title", "done", "ERROR")& " : " & $message)
 	Else
 		MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
 	EndIf

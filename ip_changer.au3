@@ -3,10 +3,12 @@
 #RequireAdmin
 
 #include <MsgBoxConstants.au3>
+#include <Array.au3>
 
 global $FILECONFIG = ""
 
-
+dim $vars[1] =  ["test=coucou"]
+printInfo(translate("msg_box_title", "done", "marche pas",$vars))
 
 if $CmdLine[0] == 1 Then
 	ConsoleWrite($CmdLine)
@@ -14,17 +16,17 @@ if $CmdLine[0] == 1 Then
 EndIf
 
 if $FILECONFIG == "" Then
-	printError("Aucun fichier de configuration spécifié !")
+	printError(translate("errors", "no_file", "No config file specified!"))
 	Exit
 EndIf
 
 if not FileExists($FILECONFIG) Then
-	printError("Fichier de configuration introuvable !")
+	printError(translate("errors", "not_found", "Config file not found!"))
 	Exit
 EndIf
 
 if FileReadLine($FILECONFIG) <> "# IP CHANGER CONFIG FILE" Then
-	printError("Fichier de configuration invalide !")
+	printError(translate("errors", "invalid", "Invalid config file!"))
 	Exit
 EndIf
 
@@ -33,25 +35,28 @@ global $MODE = IniRead($FILECONFIG, "interface", "mode", "")
 global $POWERSHELL = IniRead($FILECONFIG, "driver", "powershell", "Yes")
 
 if $INTERFACE == "" or $MODE == "" Then
-	printError("Fichier de configuration incomplet !")
+	printError(translate("errors", "partial", "Not complete config file!"))
 	Exit
 EndIf
 
 if $MODE == "OFF" Then
 	setOff()
-	printInfo("La carte "&$INTERFACE&" a bien été désactivée !")
+	dim $vars[1] =  ["interface="&INTERFACE]
+	printInfo(translate("success", "off", "The {interface} interface has been desactivated.",$vars))
 	Exit
 EndIf
 
 if $MODE == "ON" Then
 	setOn()
-	printInfo("La carte "&$INTERFACE&" a bien été activée !")
+	dim $vars[1] =  ["interface="&INTERFACE]
+	printInfo(translate("success", "on", "The {interface} interface has been activated.",$vars))
 	Exit
 EndIf
 
 if $MODE == "DHCP" Then
 	setDhcp()
-	printInfo("La carte "&$INTERFACE&" a été configurée en mode DHCP !")
+	dim $vars[1] =  ["interface="&INTERFACE]
+	printInfo(translate("success", "dhcp", "The {interface} interface has been configured on DHCP mode.",$vars))
 	Exit
 EndIf
 
@@ -67,16 +72,15 @@ if $MODE == "STATIC" Then
 	
 	
 	if $ip == "" Then
-		printError("Une adresse IP doit étre spécifiée !")
+		printError(translate("errors", "ip_not_found", "An IP address must be specified!"))
 		Exit
 	EndIf
 	
 	$ar_ip = StringSplit($ip, ".")
 	if $ar_ip[0] <> 4 Then
-		printError("L'adresse ip spécifiée n'est pas valide !")
+		printError(translate("errors", "ip_invalid", "Invalid IP address!"))
 		Exit
 	EndIf
-	
 	
 	
 	if $gateway == "" Then
@@ -98,7 +102,8 @@ if $MODE == "STATIC" Then
 	setOff()
 	setOn()
 	
-	printInfo("La carte "&$INTERFACE&" a été configurée avec l'adresse IP statique "&$ip&" !")
+	dim $vars[1] =  ["interface="&INTERFACE, "ip="&$ip]
+	printInfo(translate("success", "static", "The {interface} interface has been configured on STATIC mode with ip {ip}.",$vars))
 	Exit
 EndIf
 
@@ -205,9 +210,43 @@ func setOff()
 EndFunc
 
 func printError($message)
-	MsgBox($MB_ICONERROR +  $MB_OK, "ERREUR !", $message)
+	MsgBox($MB_ICONERROR +  $MB_OK, translate("msg_box_title", "error", "ERROR"), $message)
 EndFunc
 
-func printInfo($message, $title = "Terminé !")
+func printInfo($message, $title = translate("msg_box_title", "done", "Done"))
 	MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
+EndFunc
+
+func translate($section, $key, $default, $vars = 0)
+	$appFileConfig = "config.ini"
+	if not FileExists($appFileConfig) Then
+		Return $default
+	EndIf
+
+	$language = IniRead($appFileConfig, "locale", "language", "")
+
+	if $language == "" Then
+		Return $default
+	EndIf
+
+	$languageFile = "locale/" & $language & ".ini"
+
+	if not FileExists($languageFile)  Then
+		Return $default
+	EndIf
+
+	$translated = IniRead($languageFile, $section, $key, $default)
+
+	If IsArray($vars) Then
+        For $i = 0 To UBound($vars) - 1
+			$var = _ArrayFromString($vars[$i], "=")
+			if IsArray($var) Then
+				if UBound($var) == 2 Then
+					$translated = StringReplace($translated, "{"&$var[0]&"}", $var[1])
+				EndIf
+			EndIf
+        Next
+    EndIf
+
+	return $translated
 EndFunc

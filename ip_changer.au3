@@ -6,10 +6,14 @@
 #include <Array.au3>
 
 global $FILECONFIG = ""
+global $GUIMODE = ""
 
-if $CmdLine[0] == 1 Then
+if $CmdLine[0] >= 1 Then
 	ConsoleWrite($CmdLine)
 	$FILECONFIG = $CmdLine[1]
+	if $CmdLine[0] >= 2 Then
+		$GUIMODE = $CmdLine[2]
+	EndIf
 EndIf
 
 if $FILECONFIG == "" Then
@@ -30,6 +34,10 @@ EndIf
 global $INTERFACE = IniRead($FILECONFIG, "interface", "name", "")
 global $MODE = IniRead($FILECONFIG, "interface", "mode", "")
 global $POWERSHELL = IniRead($FILECONFIG, "driver", "powershell", "Yes")
+
+if $GUIMODE <> "alert" and $GUIMODE <> "quiet" and $GUIMODE <> "console" Then
+	$GUIMODE = IniRead("config.ini", "gui", "mode", IniRead($FILECONFIG, "gui", "mode", "alert"))
+EndIf
 
 if $INTERFACE == "" or $MODE == "" Then
 	printError(translate("errors", "partial", "Not complete config file!"))
@@ -207,11 +215,23 @@ func setOff()
 EndFunc
 
 func printError($message)
-	MsgBox($MB_ICONERROR +  $MB_OK, translate("msg_box_title", "error", "ERROR"), $message)
+	if $GUIMODE == "quiet" then
+
+	ElseIf $GUIMODE == "console" then
+		ConsoleWrite(translate("msg_box_title", "error", "ERROR")& " : " & $message)
+	Else
+		MsgBox($MB_ICONERROR +  $MB_OK, translate("msg_box_title", "error", "ERROR"), $message)
+	EndIf
 EndFunc
 
 func printInfo($message, $title = translate("msg_box_title", "done", "Done"))
-	MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
+	if $GUIMODE == "quiet" then
+
+	ElseIf $GUIMODE == "console" then
+		ConsoleWrite(translate("msg_box_title", "done", "ERROR")& " : " & $message)
+	Else
+		MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
+	EndIf
 EndFunc
 
 func translate($section, $key, $default, $vars = 0)

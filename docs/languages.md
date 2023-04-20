@@ -1,16 +1,16 @@
 # Languages
-IP Changer support multilanguage, you can create your language file or use a language file present in the repository.
+IP Changer supports multilanguage, you can create your own language file or use a language file present in the repository.
 
-The language files are ini file, you must respect the ini syntax.
+Language files are ini files, it is necessary to respect the ini syntax.
 
 ## Default language
-IP Changer was compiled with the English language by default, no extra file is needed.
+IP Changer has been compiled with the default English language, no additional files are needed.
 
 ## Set the language
-To setup an language, you must create a `locale` folder in the same directory than the `ip_changer.exe` executable.
+To setup a language, you need to create a "local" directory in the same directory as the "ip_changer.exe" executable.
 
-Put in the `locale` folder a language file *(eg: FR.ini)* then open the `config.ini` file.
-If the `config.ini` file does not exist, create it near the `locale` folder.
+Put a language file *(for example: FR.ini)* in the `locale` folder and open the `config.ini` file.
+If the 'config.ini' file does not exist, make it next to the 'locale' folder.
 
 - :file_folder:/
   - :file_folder:locale/
@@ -18,7 +18,7 @@ If the `config.ini` file does not exist, create it near the `locale` folder.
   - :hammer_and_wrench:config.ini
   - :gear:ip_changer.exe
 
-In the `config.ini` file set the language parameter in the locale section :
+In the `config.ini` file, set the language parameter in the local section:
  ```ini
 [locale]
 language=FR
@@ -27,7 +27,7 @@ language=FR
  ## Default language values
 By default, if the language file does not exist or if the config file does not exist, IP Changer is in English.
 
-The texts are defined below *(You can use this for create new language file)*:
+The texts are defined below *(You can use it to create a new language file)*:
 ```ini
 [msg_box_title]
 error=ERROR

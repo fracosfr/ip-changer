@@ -1,17 +1,17 @@
 # ip-changer
-This is a little program that allow change IP configuration on Windows 10/11 with a pre-defined configuration file.
+This is a small program that allows you to modify the IP configuration on Windows 10/11 with a predefined configuration file.
 
 ## How to install
-This script does not require installation, you can copy it on your drive and just run it with a configuration file in parameter
+This script does not require installation, you can copy it to your disk and run it with a setup file.
 
 ```bash
 ip_changer.exe my_config_file.ipcg
 ```
 
-Tips: You can define the *.ipcg extension default program with ip_config.exe to execute automatiquely the program by double click on the config file.
+Tip: You can set the `*.ipcg` extension’s default program with ip_config.exe to automatically run the program by double-clicking the configuration file.
 
 ## Edit a configuration file
-The ip changer configuration files are ini file with ipcg extension, you can open it with notepad or your favorite text editor.
+The IP Changer configuration files are ini files with the ipcg extension, you can open it with notepad or your favourite text editor.
 
 ## Configuration file 
 The firs line of the configuration file must be `# IP CHANGER CONFIG FILE`.

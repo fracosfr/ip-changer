@@ -7,9 +7,6 @@
 
 global $FILECONFIG = ""
 
-dim $vars[1] =  ["test=coucou"]
-printInfo(translate("msg_box_title", "done", "marche pas",$vars))
-
 if $CmdLine[0] == 1 Then
 	ConsoleWrite($CmdLine)
 	$FILECONFIG = $CmdLine[1]
@@ -248,5 +245,5 @@ func translate($section, $key, $default, $vars = 0)
         Next
     EndIf
 
-	return $translated
+	return BinaryToString(StringToBinary($translated, 1), 4)
 EndFunc

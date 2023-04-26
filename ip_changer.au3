@@ -107,7 +107,7 @@ if $MODE == "STATIC" Then
 	setOff()
 	setOn()
 
-	dim $vars[1] =  ["interface="&$INTERFACE, "ip="&$ip]
+	dim $vars[2] =  ["interface="&$INTERFACE, "ip="&$ip]
 	printInfo(translate("success", "static", "The {interface} interface has been configured on STATIC mode with ip {ip}.",$vars))
 	Exit
 EndIf

@@ -46,7 +46,7 @@ EndIf
 
 if $MODE == "OFF" Then
 	setOff()
-	dim $vars[1] =  ["interface="&INTERFACE]
+	dim $vars[1] =  ["interface="&$INTERFACE]
 	printInfo(translate("success", "off", "The {interface} interface has been deactivated.",$vars))
 	Exit
 EndIf
@@ -66,47 +66,47 @@ if $MODE == "DHCP" Then
 EndIf
 
 if $MODE == "STATIC" Then
-	
+
 	$ip = IniRead($FILECONFIG, "static", "ip", "")
 	$mask = IniRead($FILECONFIG, "static", "mask", "24")
 	if $POWERSHELL <> "Yes" and $mask == "24" Then
 		$mask = "255.255.255.0"
 	EndIf
-	
+
 	$gateway = IniRead($FILECONFIG, "static", "gateway", "")
-	
-	
+
+
 	if $ip == "" Then
 		printError(translate("errors", "ip_not_found", "An IP address must be specified!"))
 		Exit
 	EndIf
-	
+
 	$ar_ip = StringSplit($ip, ".")
 	if $ar_ip[0] <> 4 Then
 		printError(translate("errors", "ip_invalid", "Invalid IP address!"))
 		Exit
 	EndIf
-	
-	
+
+
 	if $gateway == "" Then
 		$gateway =  $ar_ip[1] & "." &  $ar_ip[2] & "." &  $ar_ip[3] & ".1"
 	EndIf
-	
+
 
 	setOn()
-	
+
 	if $POWERSHELL == "Yes" Then
 		powershell("Get-NetIPAddress -InterfaceAlias """&$INTERFACE&""" | Remove-NetIPAddress -Confirm:$False")
 		powershell("New-NetIPAddress -InterfaceAlias """&$INTERFACE&""" -IPAddress "&$ip&" -PrefixLength "&$mask&" -DefaultGateway "&$gateway&" -AddressFamily IPv4 -Confirm:$False")
 	Else
 		RunWait(@ComSpec & " /c " & 'netsh interface ip set address "'&$INTERFACE&'" static '&$ip&" "&$mask&" "& $gateway, '', @SW_HIDE)
 	EndIf
-	
+
 	setDns()
 	setProxy()
 	setOff()
 	setOn()
-	
+
 	dim $vars[1] =  ["interface="&$INTERFACE, "ip="&$ip]
 	printInfo(translate("success", "static", "The {interface} interface has been configured on STATIC mode with ip {ip}.",$vars))
 	Exit
@@ -115,14 +115,14 @@ EndIf
 
 
 func powershell($command)
-	RunWait(@ComSpec&" /c powershell -WindowStyle Hidden " & $command, "", @SW_HIDE)	
+	RunWait(@ComSpec&" /c powershell -WindowStyle Hidden " & $command, "", @SW_HIDE)
 EndFunc
 
 
 
 func setDhcp()
-	
-	
+
+
 	setOn()
 	if $POWERSHELL == "Yes" Then
 		powershell("Set-DnsClientServerAddress -InterfaceAlias """&$INTERFACE&""" -ResetServerAddresses -Confirm:$False")
@@ -136,14 +136,14 @@ func setDhcp()
 	setProxy()
 	setOff()
 	setOn()
-	
+
 EndFunc
 
 func setDns()
-	
+
 	$dns1 = IniRead($FILECONFIG, "dns", "primary", "")
 	$dns2 = IniRead($FILECONFIG, "dns", "secondary", "")
-	
+
 	if $POWERSHELL == "Yes" Then
 		if $dns1 <> "" Then
 			$dnsList = $dns1
@@ -160,20 +160,20 @@ func setDns()
 				RunWait(@ComSpec & " /c " & 'netsh interface ipv4 add dnsservers "'&$INTERFACE&'" '&$dns2&' index=2', '', @SW_HIDE)
 			EndIf
 		EndIf
-		
+
 	EndIf
 EndFunc
 
 func setProxy()
-	
+
 	$server = IniRead($FILECONFIG, "proxy", "server", "")
 	$port = IniRead($FILECONFIG, "proxy", "port", "")
 	$disable = IniRead($FILECONFIG, "proxy", "port", "No")
-	
+
 	if $server <> "" and $port <> "" Then
 		RegWrite("HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings", "ProxyEnable", "REG_DWORD", 1)
 		RegWrite("HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings", "ProxyServer", "REG_SZ", $server&":"&$port)
-		
+
 		$override = IniRead($FILECONFIG, "proxy", "override", "")
 		if  IniRead($FILECONFIG, "proxy", "overrideLocal", "No") == "Yes" Then
 			if $override <> "" Then
@@ -184,17 +184,17 @@ func setProxy()
 		if $override <> "" Then
 			RegWrite("HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings", "ProxyOverride", "REG_SZ", $override)
 		EndIf
-		
-		
-		
-		
+
+
+
+
 	Else
 		RegWrite("HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings", "ProxyEnable", "REG_DWORD", 0)
 	EndIf
-	
+
 	$script = IniRead($FILECONFIG, "proxy", "script", "")
 	RegWrite("HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings", "AutoConfigURL", "REG_SZ", $script)
-	
+
 EndFunc
 
 
@@ -230,31 +230,24 @@ EndFunc
 
 func translate($section, $key, $default, $vars = 0)
 	$appFileConfig = "config.ini"
-	if not FileExists($appFileConfig) Then
-		Return $default
+
+	$translated = $default
+	if FileExists($appFileConfig) Then
+		 $language = IniRead($appFileConfig, "locale", "language", "")
+		 if $language <> "" Then
+			$languageFile = "locale/" & $language & ".ini"
+			if FileExists($languageFile)  Then
+			   $translated = IniRead($languageFile, $section, $key, $default)
+			EndIf
+		 EndIf
 	EndIf
 
-	$language = IniRead($appFileConfig, "locale", "language", "")
-
-	if $language == "" Then
-		Return $default
-	EndIf
-
-	$languageFile = "locale/" & $language & ".ini"
-
-	if not FileExists($languageFile)  Then
-		Return $default
-	EndIf
-
-	$translated = IniRead($languageFile, $section, $key, $default)
 
 	If IsArray($vars) Then
         For $i = 0 To UBound($vars) - 1
-			$var = _ArrayFromString($vars[$i], "=")
-			if IsArray($var) Then
-				if UBound($var) == 2 Then
-					$translated = StringReplace($translated, "{"&$var[0]&"}", $var[1])
-				EndIf
+			$var = StringSplit($vars[$i], "=")
+			if $var[0] >= 2 Then
+				$translated = StringReplace($translated, "{"&$var[1]&"}", $var[2])
 			EndIf
         Next
     EndIf

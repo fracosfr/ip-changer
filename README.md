@@ -11,8 +11,8 @@ ip_changer.exe config_file.ipcg [quiet]
 Tip: You can set the `*.ipcg` extension’s default program with ip_config.exe to automatically run the program by double-clicking the configuration file.
 
 ## Configuration
-* (Language)[docs/languages.md]
-* (Configurations files)[docs/config_file.md]
+* [Language](docs/languages.md)
+* [Configurations files](docs/config_file.md)
 
 ## Download
 You can downlod the lastest version on this page : https://github.com/fracosfr/ip-changer/releases

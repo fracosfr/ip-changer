@@ -46,8 +46,8 @@ EndIf
 
 if $MODE == "OFF" Then
 	setOff()
-	dim $vars[1] =  ["interface="&$INTERFACE]
-	printInfo(translate("success", "off", "The {interface} interface has been desactivated.",$vars))
+	dim $vars[1] =  ["interface="&INTERFACE]
+	printInfo(translate("success", "off", "The {interface} interface has been deactivated.",$vars))
 	Exit
 EndIf
 

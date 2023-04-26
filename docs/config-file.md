@@ -51,6 +51,9 @@ Configuration files are simple ini files with the extension `.ipcg`, you can edi
 - quiet : IP Changer does not send any messages or alerts.
 - alert : IP Changer displays an alert dialog box in case of success or error
 
+> TIP: You can add "quiet" as the second parameter when running IP change
+> `ip_changer.exe your_config_file.ipcg quiet`
+
 ## Configuration file example
 ```ini
 # IP CHANGER CONFIG FILE

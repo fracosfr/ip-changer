@@ -5,7 +5,7 @@ This is a small program that allows you to modify the IP configuration on Window
 This script does not require installation, you can copy it to your disk and run it with a setup file.
 
 ```bash
-ip_changer.exe config_file.ipcg [quiet]
+ip_changer.exe config_file.ipcg [quiet|tooltip]
 ```
 
 Tip: You can set the `*.ipcg` extension’s default program with ip_config.exe to automatically run the program by double-clicking the configuration file.

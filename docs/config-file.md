@@ -15,7 +15,7 @@ Configuration files are simple ini files with the extension `.ipcg`, you can edi
 | dns       | DNS server configuration          | *optional*
 | driver    | Chose between Powershell or netsh | *optional*
 | proxy     | Configure the proxy               | *optional*
-| gui       | Define the quiet mode             | *optional*
+| gui       | Define the quiet or tooltip mode  | *optional*
 
 ## Interface section
 | Param | Function | Values | Default |
@@ -53,10 +53,11 @@ Configuration files are simple ini files with the extension `.ipcg`, you can edi
 ## Gui section
 | Param | Function | Values | Default |
 |---|---|---|---|
-| mode | Set the verbose mode | `alert`, `quiet` | `alert`|
+| mode | Set the verbose mode | `alert`, `quiet`, `tooltip` | `alert`|
 
-- quiet : IP Changer does not send any messages or alerts.
-- alert : IP Changer displays an alert dialog box in case of success or error
+- quiet   : IP Changer does not send any messages or alerts.
+- alert   : IP Changer displays an alert dialog box in case of success or error
+- tooltip : IP Changer show a tooltip with message at the bottom right of the screen
 
 > TIP: You can add "quiet" as the second parameter when running IP change
 > `ip_changer.exe your_config_file.ipcg quiet`

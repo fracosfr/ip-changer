@@ -2,6 +2,9 @@
 
 #RequireAdmin
 
+#include <AutoItConstants.au3>
+#include <GUIConstantsEx.au3>
+#include <WindowsConstants.au3>
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 
@@ -35,7 +38,7 @@ global $INTERFACE = IniRead($FILECONFIG, "interface", "name", "")
 global $MODE = IniRead($FILECONFIG, "interface", "mode", "")
 global $POWERSHELL = IniRead($FILECONFIG, "driver", "powershell", "Yes")
 
-if $GUIMODE <> "alert" and $GUIMODE <> "quiet" Then
+if $GUIMODE <> "alert" and $GUIMODE <> "quiet" and $GUIMODE <> "tooltip" Then
 	$GUIMODE = IniRead("config.ini", "gui", "mode", IniRead($FILECONFIG, "gui", "mode", "alert"))
 EndIf
 
@@ -94,7 +97,7 @@ if $MODE == "STATIC" Then
 
 
 	setOn()
-	
+
 
 	if $POWERSHELL == "Yes" Then
 		powershell("Get-NetIPAddress -InterfaceAlias """&$INTERFACE&""" | Remove-NetIPAddress -Confirm:$False")
@@ -216,8 +219,19 @@ func setOff()
 	EndIf
 EndFunc
 
+func showSplash($title, $text, $error)
+	  $icon = $TIP_INFOICON
+	  if $error Then
+		$icon = $TIP_ERRORICON
+	  EndIf
+	  ToolTip ($text, @DeskTopWidth , @DeskTopHeight - 80, $title,  $icon ,  $TIP_FORCEVISIBLE  )
+   Sleep(5000)
+EndFunc
+
 func printError($message)
 	if $GUIMODE == "quiet" then
+	ElseIf $GUIMODE == "tooltip" then
+	   showSplash("ERREUR", $message, true)
 	Else
 		MsgBox($MB_ICONERROR +  $MB_OK, translate("msg_box_title", "error", "ERROR"), $message)
 	EndIf
@@ -225,10 +239,14 @@ EndFunc
 
 func printInfo($message, $title = translate("msg_box_title", "done", "Done"))
 	if $GUIMODE == "quiet" then
+	ElseIf $GUIMODE == "tooltip" then
+	   showSplash($title, $message, false)
 	Else
 		MsgBox($MB_ICONINFORMATION +  $MB_OK, $title, $message)
 	EndIf
-EndFunc
+ EndFunc
+
+
 
 func translate($section, $key, $default, $vars = 0)
 	$appFileConfig = "config.ini"

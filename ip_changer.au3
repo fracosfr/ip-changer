@@ -94,9 +94,11 @@ if $MODE == "STATIC" Then
 
 
 	setOn()
+	
 
 	if $POWERSHELL == "Yes" Then
 		powershell("Get-NetIPAddress -InterfaceAlias """&$INTERFACE&""" | Remove-NetIPAddress -Confirm:$False")
+		powershell("Remove-NetRoute -InterfaceAlias """&$INTERFACE&""" -Confirm:$False")
 		powershell("New-NetIPAddress -InterfaceAlias """&$INTERFACE&""" -IPAddress "&$ip&" -PrefixLength "&$mask&" -DefaultGateway "&$gateway&" -AddressFamily IPv4 -Confirm:$False")
 	Else
 		RunWait(@ComSpec & " /c " & 'netsh interface ip set address "'&$INTERFACE&'" static '&$ip&" "&$mask&" "& $gateway, '', @SW_HIDE)
